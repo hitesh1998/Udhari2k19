@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="New conection"
+        android:id="@+id/main_new_connection_option"
+        app:showAsAction="never">
+
+    </item>
+
+    <item
+        android:title="Settings"
+        android:id="@+id/main_settings_option"
+        app:showAsAction="never">
+
+    </item>
+    <item
+        android:title="Contect us"
+        android:id="@+id/main_contect_us"
+        app:showAsAction="never">
+
+    </item>
+    <item
+        android:title="Logout"
+        android:id="@+id/main_logout"
+        app:showAsAction="never">
+
+    </item>
+
+
+    <item
+        android:title="Search"
+        android:id="@+id/main_search"
+        android:icon="@drawable/ic_action_search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"
+        >
+
+    </item>
+</menu>

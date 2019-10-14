@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF8F00"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/totalamount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/border"
+        android:ellipsize="middle"
+        android:hint="Enter the amount"
+        android:inputType="text"
+        android:paddingLeft="15dp"
+        android:textAlignment="center"
+        android:textColor="#E91E63"
+        android:textColorLink="#F44336"
+        android:textStyle="italic" />
+
+</LinearLayout>
