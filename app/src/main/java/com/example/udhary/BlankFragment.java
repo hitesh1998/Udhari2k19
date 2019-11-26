@@ -3,16 +3,11 @@ package com.example.udhary;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,16 +26,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -217,8 +213,8 @@ public class BlankFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull ContactsViewHolder contactsViewHolder, int i, @NonNull RetriveItem model) {
 
-                String userIDS=getRef(i).getKey();
-                Log.d(TAG, "onBindViewHolder: " + userIDS + model);
+                final String itemId=getRef(i).getKey();
+                Log.d(TAG, "onBindViewHolder: " + itemId + model);
 
                 String items = model.getuItem();
                 String amounts = model.getuAmount();
@@ -226,6 +222,47 @@ public class BlankFragment extends Fragment {
                 contactsViewHolder.userName.setText(items);
                 contactsViewHolder.userStatus.setText(amounts);
                 contactsViewHolder.cDate.setText(Date);
+                contactsViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder mBuider=new AlertDialog.Builder(getContext());
+                        mBuider.setTitle("For Remove");
+                        mBuider.setMessage("For Remove Press Remove else Press Cancle")
+                                .setCancelable(false)
+                                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                        Query deleteQuery = ref.child("Khata").child("Udhar").child(cuurentUserID).child(cId).child(itemId);
+
+                                        deleteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                dataSnapshot.getRef().removeValue();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+
+
+                                })
+                                .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //  Action for 'NO' Button
+                                        dialog.cancel();
+
+                                    }
+                                });
+                        AlertDialog dialog =mBuider.create();
+                        dialog.show();
+                        return false;
+                    }
+                });
             }
 
 

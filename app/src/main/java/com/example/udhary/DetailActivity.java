@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity  {
         conectionName=getIntent().getExtras().get("visit user name").toString();
 
 
-        Toast.makeText(this, conectionId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Add for "+conectionName, Toast.LENGTH_SHORT).show();
 
 
 

@@ -2,6 +2,8 @@ package com.example.udhary;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.ColorSpace;
 import android.os.Bundle;
@@ -108,6 +110,47 @@ public class ContactsFragment extends Fragment {
                         i.putExtra("visit user name",conectionName);
                      startActivity(i);
 
+                    }
+                });
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder mBuider=new AlertDialog.Builder(getContext());
+                        mBuider.setTitle("Remove Contacts");
+                        mBuider.setMessage("For Remove Press Remove else Press Cancle")
+                                .setCancelable(false)
+                                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                        Query deleteQuery = ref.child("Conections").child(cuurentUserID).child(userIDS);
+
+                                        deleteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                dataSnapshot.getRef().removeValue();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+
+
+                                })
+                                .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //  Action for 'NO' Button
+                                        dialog.cancel();
+
+                                    }
+                                });
+                        AlertDialog dialog =mBuider.create();
+                        dialog.show();
+                        return false;
                     }
                 });
 

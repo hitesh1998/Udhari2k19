@@ -26,8 +26,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -189,12 +193,55 @@ public class Paid extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull Paid.ContactsViewHolder contactsViewHolder, int i, @NonNull RetrivePayment model) {
 
-                String userIDS = getRef(i).getKey();
+                final String userIDS = getRef(i).getKey();
                 Log.d(TAG, "onBindViewHolder: " + userIDS + model);
                 String amounts = model.getpAmunt();
                 String Date = model.getpDate();
                 contactsViewHolder.userName.setText(amounts);
                 contactsViewHolder.cDate.setText(Date);
+
+                contactsViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder mBuider=new AlertDialog.Builder(getContext());
+                        mBuider.setTitle("For Remove");
+                        mBuider.setMessage("For Remove Press Remove else Press Cancle")
+                                .setCancelable(false)
+                                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                        Query deleteQuery = ref.child("Khata").child("Paid").child(cuurentUserID).child(cId).child(userIDS);
+
+                                        deleteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                dataSnapshot.getRef().removeValue();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+
+
+                                })
+                                .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //  Action for 'NO' Button
+                                        dialog.cancel();
+
+                                    }
+                                });
+                        AlertDialog dialog =mBuider.create();
+                        dialog.show();
+                        return false;
+                    }
+                });
+
             }
 
             @NonNull
